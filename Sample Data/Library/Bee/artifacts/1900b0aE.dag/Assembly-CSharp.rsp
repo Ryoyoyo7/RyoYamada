@@ -344,6 +344,7 @@
 "Assets/BulletController.cs"
 "Assets/Counter.cs"
 "Assets/GunController.cs"
+"Assets/ObstacleMove.cs"
 "Assets/TargetController.cs"
 "Assets/TargetGenerator.cs"
 -langversion:9.0

@@ -47,7 +47,7 @@ public class GunController : MonoBehaviour
 
     private void Jump() //Gunのジャンプに関するメソッド
     {      
-        if(Input.GetKeyDown(KeyCode.Space)) //Spaceキーを押したとき
+        if(Input.GetKeyDown(KeyCode.Space) && this.rigidbody.velocity.y == 0) //Spaceキーを押したとき
         {
             this.rigidbody.AddForce(transform.up * this.jumpForce);
             Debug.Log("jump");
