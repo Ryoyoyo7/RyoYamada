@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public class GunController : MonoBehaviour
 {
-    private Rigidbody rigidbody;
+    private Rigidbody rb;
     public GameObject bullet;
     public float speed = 0.01f;
     public float jumpForce = 350.0f;
@@ -47,15 +47,20 @@ public class GunController : MonoBehaviour
 
     private void Jump() //Gunのジャンプに関するメソッド
     {      
-        if(Input.GetKeyDown(KeyCode.Space) && this.rigidbody.velocity.y == 0) //Spaceキーを押したとき
+        if(Input.GetKeyDown(KeyCode.Space) && this.rb.velocity.y == 0) //Spaceキーを押したとき
         {
-            this.rigidbody.AddForce(transform.up * this.jumpForce);
+            this.rb.AddForce(transform.up * this.jumpForce);
             Debug.Log("jump");
         }     
     }
 
     private void Shoot() //GunのBulletを生成するメソッド
     {
+        if (GameTimer.isGameOver)
+        {
+            return;
+        }
+
         if(Input.GetMouseButtonDown(0)) //マウスの左クリックを押したとき
         {
             Vector3 bulletPosition = transform.position + new Vector3(0, 0, 0.9f);
@@ -67,7 +72,7 @@ public class GunController : MonoBehaviour
 
     void Start()
     {
-        this.rigidbody = GetComponent<Rigidbody>();
+        this.rb = GetComponent<Rigidbody>();
         this.counter = GameObject.Find("GameDirector").GetComponent<Counter>(); //GameDirectorという名前のオブジェクトを探して、その中のCounterを取得
         Debug.Log("Start");
     }

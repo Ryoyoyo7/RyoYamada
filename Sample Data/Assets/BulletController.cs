@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    private Rigidbody rigidbody;
+    private Rigidbody rb;
     public float speed = 25.0f;
     Counter counter;
+
+    private bool isHit = false; // すでに何かに当たったかどうか
 
     public void SetCounter(Counter c)
     {
@@ -15,7 +17,14 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision) //Bulletが何かと衝突したとき
     {
-        if (collision.gameObject.tag == "Target") //Targetというタグがついた物体だった場合
+        if (isHit)
+        {
+            return;
+        }
+
+        isHit = true;
+
+        if (collision.gameObject.tag == "Target") //Targetに当たった場合
         {
             if (counter != null)
             {
@@ -23,6 +32,21 @@ public class BulletController : MonoBehaviour
                 Debug.Log(counter.hitCount + " Hit");
             }
         }
+        else if (collision.gameObject.tag == "Obstacle") //Obstacleに当たった場合
+        {
+            if (counter != null)
+            {
+                counter.hitCount--;
+
+                if (counter.hitCount < 0)
+                {
+                    counter.hitCount = 0;
+                }
+
+                Debug.Log("Obstacle Hit : -1");
+            }
+        }
+
         Invoke("destroyBullet", 1); //一秒後にdestroyBullet()を呼び出す
     }
 
@@ -33,8 +57,8 @@ public class BulletController : MonoBehaviour
 
     void Start()
     {
-        this.rigidbody = GetComponent<Rigidbody>();
-        this.rigidbody.velocity = new Vector3(0, 0, this.speed); //初速度の設定
+        this.rb = GetComponent<Rigidbody>();
+        this.rb.velocity = new Vector3(0, 0, this.speed); //初速度の設定
     }
 
     void Update()

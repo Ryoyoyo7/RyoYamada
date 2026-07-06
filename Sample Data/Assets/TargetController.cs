@@ -5,7 +5,7 @@ public class TargetController : MonoBehaviour
 {
     private float time;
     public float destroyDistance = 6.0f;
-   
+
     void Start()
     {
         this.time = 0.0f;     

@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move_Position : MonoBehaviour
+public class ObstacleMove : MonoBehaviour
 {
-    public float speed = 5.0f;
-    public float startX = -10.0f; // 始点（左の出現位置）
-    public float endX = 10.0f;    // 終点（右の消える位置）
+    public float speed = 8.0f;
+    public float startX = -12.0f; // 始点（左の出現位置）
+    public float endX = 12.0f;    // 終点（右の消える位置）
 
     void Update()
     {
