@@ -56,7 +56,7 @@ public class GunController : MonoBehaviour
 
     private void Shoot() //GunのBulletを生成するメソッド
     {
-        if (GameTimer.isGameOver)
+        if (!GameTimer.isPlaying || GameTimer.isGameOver)
         {
             return;
         }
