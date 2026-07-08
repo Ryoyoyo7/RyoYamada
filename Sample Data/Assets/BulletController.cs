@@ -46,6 +46,16 @@ public class BulletController : MonoBehaviour
                 Debug.Log("Obstacle Hit : -1");
             }
         }
+        else if (collision.gameObject.tag == "BonusTarget")
+        {
+            if (counter != null)
+            {
+                counter.hitCount += 3;
+                Debug.Log("Bonus Target Hit : +3");
+            }
+
+            Destroy(collision.gameObject);
+        }
 
         Invoke("destroyBullet", 1); //一秒後にdestroyBullet()を呼び出す
     }
