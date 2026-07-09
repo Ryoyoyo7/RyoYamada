@@ -5,43 +5,44 @@ public class GunController : MonoBehaviour
 {
     private Rigidbody rb;
     public GameObject bullet;
-    public float speed = 0.01f;
+    public float speed = 5.0f;
     public float jumpForce = 350.0f;
     Counter counter;
     SoundManager soundManager;
 
-    private void Move() //Gunの移動に関するメソッド
+    private void Move()
     {
-        if (Input.GetKey(KeyCode.W)) //Wキーを押している間
+        float move = speed * Time.deltaTime;
+
+        if (Input.GetKey(KeyCode.W))
         {
             if (this.transform.position.z <= -5)
             {
-                transform.Translate(0, 0, this.speed);
-                Debug.Log("front");
+                transform.Translate(0, 0, move);
             }
         }
-        if (Input.GetKey(KeyCode.S)) //Sキーを押している間
+
+        if (Input.GetKey(KeyCode.S))
         {
             if (this.transform.position.z >= -9)
             {
-                transform.Translate(0, 0, -this.speed);
-                Debug.Log("back");
+                transform.Translate(0, 0, -move);
             }
         }
-        if (Input.GetKey(KeyCode.A)) //Aキーを押している間
+
+        if (Input.GetKey(KeyCode.A))
         {
             if (this.transform.position.x >= -9.5)
             {
-                transform.Translate(-this.speed, 0, 0);
-                Debug.Log("left");
+                transform.Translate(-move, 0, 0);
             }
         }
-        if (Input.GetKey(KeyCode.D)) //Dキーを押している間
+
+        if (Input.GetKey(KeyCode.D))
         {
             if (this.transform.position.x <= 9.5)
             {
-                transform.Translate(this.speed, 0, 0);
-                Debug.Log("right");
+                transform.Translate(move, 0, 0);
             }
         }
     }

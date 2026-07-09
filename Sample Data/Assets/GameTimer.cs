@@ -8,6 +8,7 @@ public class GameTimer : MonoBehaviour
     public Text resultDetailText;
     public GameObject startPanel;
     public GameObject retryButton;
+    public GameObject resultBackPanel;
     private string difficultyName = "Easy";
 
     public float timeLimit = 30.0f;
@@ -56,6 +57,11 @@ public class GameTimer : MonoBehaviour
         if (retryButton != null)
         {
             retryButton.SetActive(false);
+        }
+
+        if (resultBackPanel != null)
+        {
+            resultBackPanel.SetActive(false);
         }
     }
 
@@ -134,6 +140,11 @@ public class GameTimer : MonoBehaviour
         {
             resultText.gameObject.SetActive(true);
             resultText.text = "3";
+        }
+
+        if (resultBackPanel != null)
+        {
+            resultBackPanel.SetActive(false);
         }
 
         timeText.text = "Time : " + time.ToString("F1");
@@ -237,6 +248,11 @@ public class GameTimer : MonoBehaviour
         {
             retryButton.SetActive(true);
         }
+
+        if (resultBackPanel != null)
+        {
+            resultBackPanel.SetActive(true);
+        }
     }
 
     public void RetryGame()
@@ -275,6 +291,11 @@ public class GameTimer : MonoBehaviour
         if (resultDetailText != null)
         {
             resultDetailText.gameObject.SetActive(false);
+        }
+
+        if (resultBackPanel != null)
+        {
+            resultBackPanel.SetActive(false);
         }
     }
 
