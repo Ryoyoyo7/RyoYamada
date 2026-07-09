@@ -348,6 +348,7 @@
 "Assets/GameTimer.cs"
 "Assets/GunController.cs"
 "Assets/ObstacleMove.cs"
+"Assets/SoundManager.cs"
 "Assets/TargetController.cs"
 "Assets/TargetGenerator.cs"
 -langversion:9.0

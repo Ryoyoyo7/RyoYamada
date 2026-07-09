@@ -7,6 +7,7 @@ public class BulletController : MonoBehaviour
     private Rigidbody rb;
     public float speed = 25.0f;
     Counter counter;
+    SoundManager soundManager;
 
     private bool isHit = false; // すでに何かに当たったかどうか
 
@@ -29,7 +30,13 @@ public class BulletController : MonoBehaviour
             if (counter != null)
             {
                 counter.hitCount++;
+                counter.targetHitCount++;
                 Debug.Log(counter.hitCount + " Hit");
+            }
+
+            if (soundManager != null)
+            {
+                soundManager.PlayHit();
             }
         }
         else if (collision.gameObject.tag == "Obstacle") //Obstacleに当たった場合
@@ -37,6 +44,7 @@ public class BulletController : MonoBehaviour
             if (counter != null)
             {
                 counter.hitCount--;
+                counter.obstacleHitCount++;
 
                 if (counter.hitCount < 0)
                 {
@@ -45,13 +53,24 @@ public class BulletController : MonoBehaviour
 
                 Debug.Log("Obstacle Hit : -1");
             }
+
+            if (soundManager != null)
+            {
+                soundManager.PlayDamage();
+            }
         }
         else if (collision.gameObject.tag == "BonusTarget")
         {
             if (counter != null)
             {
                 counter.hitCount += 3;
+                counter.bonusHitCount++;
                 Debug.Log("Bonus Target Hit : +3");
+            }
+
+            if (soundManager != null)
+            {
+                soundManager.PlayBonus();
             }
 
             Destroy(collision.gameObject);
@@ -69,6 +88,7 @@ public class BulletController : MonoBehaviour
     {
         this.rb = GetComponent<Rigidbody>();
         this.rb.velocity = new Vector3(0, 0, this.speed); //初速度の設定
+        soundManager = GameObject.Find("GameDirector").GetComponent<SoundManager>();
     }
 
     void Update()

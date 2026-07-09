@@ -8,6 +8,7 @@ public class GunController : MonoBehaviour
     public float speed = 0.01f;
     public float jumpForce = 350.0f;
     Counter counter;
+    SoundManager soundManager;
 
     private void Move() //Gunの移動に関するメソッド
     {
@@ -67,6 +68,13 @@ public class GunController : MonoBehaviour
             GameObject newBullet = Instantiate(this.bullet, bulletPosition, Quaternion.identity); //BulletをnewBulletという名前で生成
             BulletController bulletController = newBullet.GetComponent<BulletController>(); //生成されたnewBullet内のBulletControllerを取得
             bulletController.SetCounter(counter); //Startで取得したcounterを、BulletController.cs内のSetCounterという関数に代入、実行
+
+            counter.shotCount++;
+
+            if (soundManager != null)
+            {
+                soundManager.PlayShoot();
+            }
         }
     }
 
@@ -75,6 +83,7 @@ public class GunController : MonoBehaviour
         this.rb = GetComponent<Rigidbody>();
         this.counter = GameObject.Find("GameDirector").GetComponent<Counter>(); //GameDirectorという名前のオブジェクトを探して、その中のCounterを取得
         Debug.Log("Start");
+        soundManager = GameObject.Find("GameDirector").GetComponent<SoundManager>();
     }
 
     void Update()

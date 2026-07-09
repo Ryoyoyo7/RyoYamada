@@ -5,7 +5,10 @@ public class GameTimer : MonoBehaviour
 {
     public Text timeText;
     public Text resultText;
+    public Text resultDetailText;
     public GameObject startPanel;
+    public GameObject retryButton;
+    private string difficultyName = "Easy";
 
     public float timeLimit = 30.0f;
     public float countdownTime = 3.0f;
@@ -40,9 +43,19 @@ public class GameTimer : MonoBehaviour
             resultText.gameObject.SetActive(false);
         }
 
+        if (resultDetailText != null)
+        {
+            resultDetailText.gameObject.SetActive(false);
+        }
+
         if (startPanel != null)
         {
             startPanel.SetActive(true);
+        }
+
+        if (retryButton != null)
+        {
+            retryButton.SetActive(false);
         }
     }
 
@@ -72,22 +85,24 @@ public class GameTimer : MonoBehaviour
 
     public void SelectEasy()
     {
-        PrepareGame(10);
+        PrepareGame(10, "Easy");
     }
 
     public void SelectNormal()
     {
-        PrepareGame(20);
+        PrepareGame(20, "Normal");
     }
 
     public void SelectHard()
     {
-        PrepareGame(30);
+        PrepareGame(30, "Hard");
     }
 
-    private void PrepareGame(int score)
+    private void PrepareGame(int score, string difficulty)
     {
         clearScore = score;
+        difficultyName = difficulty;
+
         time = timeLimit;
         countdown = countdownTime;
 
@@ -97,12 +112,22 @@ public class GameTimer : MonoBehaviour
 
         if (counter != null)
         {
-            counter.hitCount = 0;
+            counter.ResetRecord();
+        }
+
+        if (resultDetailText != null)
+        {
+            resultDetailText.gameObject.SetActive(false);
         }
 
         if (startPanel != null)
         {
             startPanel.SetActive(false);
+        }
+
+        if (retryButton != null)
+        {
+            retryButton.SetActive(false);
         }
 
         if (resultText != null)
@@ -158,18 +183,113 @@ public class GameTimer : MonoBehaviour
         isPlaying = false;
         isGameOver = true;
 
+        int score = counter.hitCount;
+        string result;
+
+        if (score >= clearScore)
+        {
+            result = "GAME CLEAR";
+        }
+        else
+        {
+            result = "GAME OVER";
+        }
+
+        string highScoreKey = "HighScore_" + difficultyName;
+        int highScore = PlayerPrefs.GetInt(highScoreKey, 0);
+
+        if (score > highScore)
+        {
+            highScore = score;
+            PlayerPrefs.SetInt(highScoreKey, highScore);
+            PlayerPrefs.Save();
+        }
+
+        float accuracy = 0.0f;
+
+        if (counter.shotCount > 0)
+        {
+            accuracy = (float)(counter.targetHitCount + counter.bonusHitCount) / counter.shotCount * 100.0f;
+        }
+
         if (resultText != null)
         {
-            if (counter.hitCount >= clearScore)
-            {
-                resultText.text = "GAME CLEAR";
-            }
-            else
-            {
-                resultText.text = "GAME OVER";
-            }
-
+            resultText.text = result;
             resultText.gameObject.SetActive(true);
+        }
+
+        if (resultDetailText != null)
+        {
+            resultDetailText.text =
+                "Difficulty : " + difficultyName + "\n" +
+                "Score : " + score + " / " + clearScore + "\n" +
+                "Shot : " + counter.shotCount + "\n" +
+                "Target Hit : " + counter.targetHitCount + "\n" +
+                "Bonus Hit : " + counter.bonusHitCount + " / " + " 3 " + "\n" +
+                "Obstacle Hit : " + counter.obstacleHitCount + "\n" +
+                "Accuracy : " + accuracy.ToString("F1") + "%\n" +
+                "High Score : " + highScore;
+
+            resultDetailText.gameObject.SetActive(true);
+        }
+
+        if (retryButton != null)
+        {
+            retryButton.SetActive(true);
+        }
+    }
+
+    public void RetryGame()
+    {
+        time = timeLimit;
+        countdown = countdownTime;
+
+        isPlaying = false;
+        isGameOver = false;
+        isCountingDown = false;
+
+        if (counter != null)
+        {
+            counter.ResetRecord();
+        }
+
+        ClearObjects();
+
+        timeText.text = "Time : " + timeLimit.ToString("F1");
+
+        if (resultText != null)
+        {
+            resultText.gameObject.SetActive(false);
+        }
+
+        if (retryButton != null)
+        {
+            retryButton.SetActive(false);
+        }
+
+        if (startPanel != null)
+        {
+            startPanel.SetActive(true);
+        }
+
+        if (resultDetailText != null)
+        {
+            resultDetailText.gameObject.SetActive(false);
+        }
+    }
+
+    private void ClearObjects()
+    {
+        TargetController[] targets = FindObjectsOfType<TargetController>();
+        foreach (TargetController target in targets)
+        {
+            Destroy(target.gameObject);
+        }
+
+        BulletController[] bullets = FindObjectsOfType<BulletController>();
+        foreach (BulletController bullet in bullets)
+        {
+            Destroy(bullet.gameObject);
         }
     }
 }
